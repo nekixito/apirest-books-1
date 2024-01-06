@@ -1,11 +1,14 @@
 package com.company.books.backend.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.company.books.backend.model.Categoria;
 import com.company.books.backend.model.dao.ICategoriaDao;
 import com.company.books.backend.response.CategoriaResponseRest;
 
@@ -25,9 +28,19 @@ public class CategoriaServiceImpl implements ICategoriaService {
 		
 		CategoriaResponseRest response = new CategoriaResponseRest();
 		
+		try {
+			List<Categoria> categoria = (List<Categoria>) categoriaDao.findAll();
+			
+			response.getCategoriaResponse().setCategoria(categoria);
+			
+			response.setMetadata("Respuesta ok", "00", "Respuesta exitosa");
+		} catch (Exception e) {
+			response.setMetadata("Respuesta NO ok", "-1", "Respuesta incorrecta");
+			log.error("Error al consultar categorias; ",e.getMessage());
+			e.getStackTrace();
+		}
 		
-		
-		return null;
+		return response;
 	}
 
 }
